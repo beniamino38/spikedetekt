@@ -28,6 +28,9 @@ from log import log_message, log_warning
 import debug
 from debug import plot_diagnostics # for debugging with Parameters['DEBUG'] 
 
+import resource
+resource.setrlimit(resource.RLIMIT_NOFILE, (1000,1000))
+
 def set_globals_samples(sample_rate,high_frequency_factor):
     """
     parameters are set in terms of time (seconds).
@@ -302,18 +305,27 @@ def extract_spikes(h5s, basename, DatFileNames, n_ch_dat,
         ############## ALIGN AND INTERPOLATE WAVES #######################
         nextbits = []
         for IndList in IndListsChunk:
-            try:
-                wave, s_peak, cm = extract_wave(IndList, FilteredChunk,
-                                                S_BEFORE, S_AFTER, N_CH,
-                                                s_start,Threshold)
-                s_offset = s_start+s_peak
-                if keep_start<=s_offset<keep_end:
-                    spike_count += 1
-                    nextbits.append((wave, s_offset, cm))
-            except np.linalg.LinAlgError:
-                s = '*** WARNING *** Unalignable spike discarded in chunk {chunk}.'.format(
+            IndArr = np.array(IndList, dtype=np.int32)
+            SampArr = IndArr[:, 0]
+            ChArr = IndArr[:, 1]
+            if SampArr.size<4:
+                s = 'Skipping component with <4 samples in chunk {chunk}.'.format(
                         chunk=(s_start, s_end))
-                log_warning(s)
+                #log_warning(s)
+            else:
+                try:
+                    wave, s_peak, cm = extract_wave(IndList, FilteredChunk,
+                                                    S_BEFORE, S_AFTER, N_CH,
+                                                    s_start,Threshold)
+                    s_offset = s_start+s_peak
+                    if keep_start<=s_offset<keep_end:
+                        spike_count += 1
+                        nextbits.append((wave, s_offset, cm))
+
+                except np.linalg.LinAlgError:
+                    s = '*** WARNING *** Unalignable spike discarded in chunk {chunk}.'.format(
+                            chunk=(s_start, s_end))
+                    log_warning(s)
         # and return them in time sorted order
         nextbits.sort(key=lambda (wave, s, cm): s)
         for wave, s, cm in nextbits:
