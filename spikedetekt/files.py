@@ -278,7 +278,12 @@ def write_trivial_clu(restimes,filepath):
     clus = np.zeros_like(restimes) 
     clu_file = open( filepath,'w')
     #header line: number of clusters
-    n_clu = clus.max()+1
+    if restimes.size==0:
+        n_clu = 0
+        from IPython.core.debugger import Tracer; debug_here = Tracer()
+        debug_here()
+    else:
+        n_clu = clus.max()+1
     clu_file.write( '%i\n'%n_clu)
     #one cluster per line
     np.savetxt(clu_file,np.int16(clus),fmt="%i")
