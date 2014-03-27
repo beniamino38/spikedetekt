@@ -76,7 +76,8 @@ class Probe(object):
             curvs = set()
             for i, j in edges:
                 curvs.add(i)
-                curvs.add(j)
+                if j>0:
+                    curvs.add(j)
             if curvs.intersection(used_vertices):
                 raise ValueError("Probe graphs overlap.")
             used_vertices.update(curvs)
@@ -91,13 +92,16 @@ class Probe(object):
         self.channel_graph = G = {}
         for probenum, edges in probes.iteritems():
             for i, j in edges:
-                if i in G:
-                    ni = G[i]
-                else:
+                if j==-1:
                     ni = G[i] = set()
-                if j in G:
-                    nj = G[j]
                 else:
-                    nj = G[j] = set()
-                ni.add(j)
-                nj.add(i)
+                    if i in G:
+                        ni = G[i]
+                    else:
+                        ni = G[i] = set()
+                    if j in G:
+                        nj = G[j]
+                    else:
+                        nj = G[j] = set()
+                    ni.add(j)
+                    nj.add(i)
