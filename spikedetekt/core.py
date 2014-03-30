@@ -28,8 +28,10 @@ from log import log_message, log_warning
 import debug
 from debug import plot_diagnostics # for debugging with Parameters['DEBUG'] 
 
-import resource
-resource.setrlimit(resource.RLIMIT_NOFILE, (1000,1000))
+import os
+if os.name != 'nt':
+    import resource
+    resource.setrlimit(resource.RLIMIT_NOFILE, (1000,1000))
 
 def set_globals_samples(sample_rate,high_frequency_factor):
     """
