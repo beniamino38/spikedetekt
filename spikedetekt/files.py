@@ -170,7 +170,7 @@ def get_chunk_for_thresholding(fd, n_ch_dat, ChannelsToUse, n_samples):
     n_samps_thresh = min(CHUNK_SIZE*CHUNKS_FOR_THRESH, n_samples)
     x = np.fromfile(fd, dtype=DTYPE, count=n_samps_thresh*n_ch_dat)
     DatChunk = np.fromfile(fd, dtype=DTYPE, count=n_samps_thresh*n_ch_dat)
-    DatChunk = DatChunk.reshape(n_samps_thresh, n_ch_dat)[:, ChannelsToUse]
+    DatChunk = DatChunk.reshape(DatChunk.size/n_ch_dat, n_ch_dat)[:, ChannelsToUse]
     DatChunk = DatChunk.astype(np.int32)
     fd.seek(0)
     return DatChunk
