@@ -16,7 +16,10 @@ def compute_pcs(X_ns):
     PC_ss : array. Each row is a principal component. Sorted in increasing order
                    of eigenvalues
     """
-    Cov_ss = np.cov(X_ns.T.astype(np.float64))
+    if X_ns.shape[0]==1:
+        Cov_ss = np.zeros([X_ns.size, X_ns.size])
+    else:
+        Cov_ss = np.cov(X_ns.T.astype(np.float64))
     Vals, Vecs = np.linalg.eigh(Cov_ss)
     return Vecs.astype(np.float32).T[np.argsort(Vals)[::-1]]
 
