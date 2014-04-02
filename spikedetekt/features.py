@@ -27,6 +27,9 @@ def reget_features(X_nsc):
     n_livech = X_nsc.shape[2]
     s_tot = Parameters['S_TOTAL']
     PC_3s = np.zeros((FPC,s_tot,n_livech))
+    if X_nsc.size==0:
+        # return zeros of the right size if the input is zero
+        return PC_3s
     for j in xrange(n_livech):
         PC_3s[:,:,j] = compute_pcs(X_nsc[:,:,j])[:FPC]  # FPC x Parameters['S_TOTAL'] x Parameters['N_CH']
     print 'PC_3s', PC_3s.shape
