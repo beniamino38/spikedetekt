@@ -284,17 +284,22 @@ def extract_spikes(h5s, basename, DatFileNames, n_ch_dat,
             Parameters['THRESHOLD'] = Threshold #Record the absolute Threshold used
             
         
-    # set the high and low thresholds 
+    # set the high and low thresholds
+    do_pickle = False
     if Parameters['USE_HILBERT']:
         ThresholdStrong = Parameters['THRESH_STRONG']
         ThresholdWeak = Parameters['THRESH_WEAK']
+        do_pickle = True
     elif Parameters['USE_COMPONENT_ALIGNFLOATMASK']:#to be used with a single threshold only
         ThresholdStrong = Threshold
         ThresholdWeak = ThresholdSDFactor*THRESH_SD_LOWER
-    picklefile =     open("threshold.p","wb")
-    pickle.dump([ThresholdStrong,ThresholdWeak], picklefile)
-    threshold_outputstring = 'Threshold strong = ' + repr(ThresholdStrong) + '\n' + 'Threshold weak = ' + repr(ThresholdWeak)
-    log_message(threshold_outputstring)
+        do_pickle = True
+
+    if do_pickle:
+        picklefile =     open("threshold.p","wb")
+        pickle.dump([ThresholdStrong,ThresholdWeak], picklefile)
+        threshold_outputstring = 'Threshold strong = ' + repr(ThresholdStrong) + '\n' + 'Threshold weak = ' + repr(ThresholdWeak)
+        log_message(threshold_outputstring)
         
     n_samples = num_samples(DatFileNames, n_ch_dat)
     spike_count = 0
