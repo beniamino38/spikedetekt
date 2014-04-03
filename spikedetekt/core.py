@@ -379,7 +379,7 @@ def extract_spikes(h5s, basename, DatFileNames, n_ch_dat,
         if Parameters['WRITE_BINFIL_FILE']:
             fil_writer.write_bin(BinaryChunk, s_start, s_end, keep_start, keep_end)
         
-        print len(IndListsChunk), 'len(IndListsChunk)'
+        #print len(IndListsChunk), 'len(IndListsChunk)'
         ############## ALIGN AND INTERPOLATE WAVES #######################
         nextbits = []
         if Parameters['USE_HILBERT']:
