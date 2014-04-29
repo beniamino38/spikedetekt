@@ -271,8 +271,6 @@ def write_clu(clus, filepath):
     #header line: number of clusters
     if restimes.size==0:
         n_clu = 0
-        from IPython.core.debugger import Tracer; debug_here = Tracer()
-        debug_here()
     else:
         n_clu = clus.max()+1
     clu_file.write( '%i\n'%n_clu)
